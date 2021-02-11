@@ -164,10 +164,10 @@ static void dac_read_all()
     uint32_t dac_data_a_reg  = dac_data_a_read();
     uint32_t dac_data_b_reg  = dac_data_b_read();
     uint32_t dac_cw_reg  = dac_cw_read();
-    printf("Data:\t\t0x%08x\n", dac_data_reg);
-    printf("Data A:\t\t0x%08x\n", dac_data_a_reg);
-    printf("Data B:\t\t0x%08x\n", dac_data_b_reg);
-    printf("Data CW:\t0x%08x\n", dac_cw_reg);
+    printf("Data:\t\t0x%08x (%d)\n", dac_data_reg, dac_data_reg);
+    printf("Data A:\t\t0x%08x (%d)\n", dac_data_a_reg, dac_data_a_reg);
+    printf("Data B:\t\t0x%08x (%d)\n", dac_data_b_reg, dac_data_b_reg);
+    printf("Data CW:\t0x%08x (%d)\n", dac_cw_reg, dac_cw_reg);
 
 }
 
