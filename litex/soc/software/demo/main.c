@@ -87,6 +87,7 @@ static void help(void)
 	puts("led                - Led demo");
 #endif
 	puts("donut              - Spinning Donut demo");
+	puts("ident              - Identifier of the system");
 }
 
 /*-----------------------------------------------------------------------*/
@@ -138,6 +139,23 @@ static void donut_cmd(void)
 	donut();
 }
 
+/**
+ * Command "ident"
+ *
+ * Identifier of the system
+ *
+ */
+#define IDENT_SIZE 256
+static void ident_cmd()
+{
+	char buffer[IDENT_SIZE];
+
+	get_ident(buffer);
+	printf("Ident: %s\n", *buffer ? buffer : "-");
+	printf("NICK ER SEJ\n");
+}
+
+
 /*-----------------------------------------------------------------------*/
 /* Console service / Main                                                */
 /*-----------------------------------------------------------------------*/
@@ -160,6 +178,8 @@ static void console_service(void)
 #endif
 	else if(strcmp(token, "donut") == 0)
 		donut_cmd();
+	else if(strcmp(token, "ident") == 0)
+		ident_cmd();
 	prompt();
 }
 
