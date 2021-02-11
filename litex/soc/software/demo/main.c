@@ -88,6 +88,10 @@ static void help(void)
 #endif
 	puts("donut              - Spinning Donut demo");
 	puts("ident              - Identifier of the system");
+	puts("dwa                - DAC write a (+1)");
+	puts("dwb                - DAC write b (x2)");
+	puts("dwcw               - DAC write cw (toggles)");
+	puts("dr                 - DAC read all");
 }
 
 /*-----------------------------------------------------------------------*/
@@ -154,6 +158,39 @@ static void ident_cmd()
 	printf("Ident: %s\n", *buffer ? buffer : "-");
 	printf("NICK ER SEJ\n");
 }
+static void dac_read_all()
+{
+    uint32_t dac_data_reg  = dac_data_read();
+    uint32_t dac_data_a_reg  = dac_data_a_read();
+    uint32_t dac_data_b_reg  = dac_data_b_read();
+    uint32_t dac_cw_reg  = dac_cw_read();
+    printf("Data:\t\t0x%08x\n", dac_data_reg);
+    printf("Data A:\t\t0x%08x\n", dac_data_a_reg);
+    printf("Data B:\t\t0x%08x\n", dac_data_b_reg);
+    printf("Data CW:\t0x%08x\n", dac_cw_reg);
+
+}
+
+static void dac_write_a()
+{
+    uint32_t a = dac_data_a_read();
+    dac_data_a_write(a+1);
+    dac_read_all();
+}
+
+static void dac_write_b()
+{
+    uint32_t a = dac_data_a_read();
+    dac_data_b_write(a<<1);
+    dac_read_all();
+}
+
+static void dac_write_cw()
+{
+    uint32_t a = dac_cw_read();
+    dac_cw_write(~a);
+    dac_read_all();
+}
 
 
 /*-----------------------------------------------------------------------*/
@@ -180,8 +217,17 @@ static void console_service(void)
 		donut_cmd();
 	else if(strcmp(token, "ident") == 0)
 		ident_cmd();
+    else if(strcmp(token, "dwa") == 0)
+		dac_write_a();
+	else if(strcmp(token, "dwb") == 0)
+		dac_write_b();
+    else if(strcmp(token, "dwcw") == 0)
+		dac_write_cw();
+	else if(strcmp(token, "dr") == 0)
+		dac_read_all();
 	prompt();
 }
+
 
 int main(void)
 {
