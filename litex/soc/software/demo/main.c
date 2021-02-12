@@ -92,6 +92,7 @@ static void help(void)
 	puts("dwb                - DAC write b (x2)");
 	puts("dwcw               - DAC write cw (toggles)");
 	puts("dr                 - DAC read all");
+	puts("c                  - Counter thing");
 }
 
 /*-----------------------------------------------------------------------*/
@@ -160,11 +161,11 @@ static void ident_cmd()
 }
 static void dac_read_all()
 {
-    uint32_t dac_data_reg  = dac_data_read();
-    uint32_t dac_data_a_reg  = dac_data_a_read();
-    uint32_t dac_data_b_reg  = dac_data_b_read();
+    //uint32_t dac_data_reg  = dac_data_read();
+    uint32_t dac_data_a_reg  = dac_data_a_storage_read();
+    uint32_t dac_data_b_reg  = dac_data_b_storage_read();
     uint32_t dac_cw_reg  = dac_cw_read();
-    printf("Data:\t\t0x%08x (%d)\n", dac_data_reg, dac_data_reg);
+    //printf("Data:\t\t0x%08x (%d)\n", dac_data_reg, dac_data_reg);
     printf("Data A:\t\t0x%08x (%d)\n", dac_data_a_reg, dac_data_a_reg);
     printf("Data B:\t\t0x%08x (%d)\n", dac_data_b_reg, dac_data_b_reg);
     printf("Data CW:\t0x%08x (%d)\n", dac_cw_reg, dac_cw_reg);
@@ -173,15 +174,15 @@ static void dac_read_all()
 
 static void dac_write_a()
 {
-    uint32_t a = dac_data_a_read();
-    dac_data_a_write(a+1);
+    uint32_t a = dac_data_b_storage_read();
+    dac_data_a_storage_write(a+1);
     dac_read_all();
 }
 
 static void dac_write_b()
 {
-    uint32_t a = dac_data_a_read();
-    dac_data_b_write(a<<1);
+    uint32_t a = dac_data_b_storage_read();
+    dac_data_b_storage_write(a<<1);
     dac_read_all();
 }
 
@@ -190,6 +191,24 @@ static void dac_write_cw()
     uint32_t a = dac_cw_read();
     dac_cw_write(~a);
     dac_read_all();
+}
+
+static void count()
+{
+    uint32_t a = dac_cw_read();
+    uint32_t i = 0;
+    uint32_t counter = 0;
+
+    for (i; i < 10; i++) {
+        printf("Round %d\n", i);
+        for (counter = 0; counter < (1024); counter++ ) {
+            dac_data_a_storage_write(counter);
+            dac_data_b_storage_write(counter);
+            //dac_cw_write(~a);
+            //dac_read_all();
+        }
+    }
+    printf("Done counting!\n");
 }
 
 
@@ -225,6 +244,8 @@ static void console_service(void)
 		dac_write_cw();
 	else if(strcmp(token, "dr") == 0)
 		dac_read_all();
+	else if(strcmp(token, "c") == 0)
+		count();
 	prompt();
 }
 
