@@ -195,17 +195,18 @@ static void dac_write_cw()
 
 static void count()
 {
-    uint32_t a = dac_cw_read();
+    uint32_t a = 0;
     uint32_t i = 0;
     uint32_t counter = 0;
 
-    for (i; i < 10; i++) {
+    for (i; i < 2; i++) {
         printf("Round %d\n", i);
         for (counter = 0; counter < (1024); counter++ ) {
             dac_data_a_storage_write(counter);
             dac_data_b_storage_write(counter);
-            //dac_cw_write(~a);
-            //dac_read_all();
+            //a = dac_cw_read();
+            //dac_cw_write(a ^ 1);
+            dac_read_all();
         }
     }
     printf("Done counting!\n");
